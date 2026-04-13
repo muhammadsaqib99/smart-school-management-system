@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+
+<div class="grid grid-cols-2 gap-4">
+
+    <a href="{% url 'students:add_class' %}"
+       class="p-6 bg-white shadow rounded hover:bg-blue-50">
+        ➕ Add Class
+    </a>
+
+    <a href="{% url 'students:add_section' %}"
+       class="p-6 bg-white shadow rounded hover:bg-blue-50">
+        📘 Add Section
+    </a>
+
+</div>
+
+{% endblock %}

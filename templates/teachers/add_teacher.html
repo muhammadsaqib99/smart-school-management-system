@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-md">
+
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">
+        Add Teacher
+    </h2>
+
+    <form method="POST" class="space-y-5">
+        {% csrf_token %}
+
+        {% for field in form %}
+        <div>
+
+            <label class="block text-sm font-medium text-gray-600 mb-1">
+                {{ field.label }}
+            </label>
+
+            {{ field }}
+
+            {% if field.errors %}
+                <p class="text-red-500 text-sm mt-1">
+                    {{ field.errors|striptags }}
+                </p>
+            {% endif %}
+
+        </div>
+        {% endfor %}
+
+        <div class="flex justify-end space-x-3 pt-4">
+
+            <a href="{% url 'students:teacher_list' %}"
+               class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
+                Cancel
+            </a>
+
+            <button type="submit"
+                    class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow transition">
+                Save
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<script>
+    const classField = document.getElementById("id_class_obj");
+    const sectionField = document.getElementById("id_section");
+
+    classField.addEventListener("change", function() {
+        const classId = this.value;
+
+        fetch(`/ajax/load-sections/?class_id=${classId}`)
+            .then(response => response.json())
+            .then(data => {
+
+                sectionField.innerHTML = '';
+
+                data.forEach(section => {
+                    const option = document.createElement("option");
+                    option.value = section.id;
+                    option.textContent = section.name;
+                    sectionField.appendChild(option);
+                });
+
+            });
+    });
+</script>
+{% endblock %}

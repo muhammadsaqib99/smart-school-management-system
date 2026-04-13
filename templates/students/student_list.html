@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+
+           <form method="GET" class="mb-4 flex gap-2">
+
+               <input type="text" name="search" value="{{ search_query }}"
+                   placeholder="Search student..."
+                   class="border px-3 py-2 rounded w-full">
+
+                   <button class="bg-blue-600 text-white px-4 py-2 rounded">
+                      Search
+                   </button>
+
+            </form> 
+
+
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold">Student List</h2>
+
+        <a href="{% url 'students:add_student' %}"
+           class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            + Add Student
+        </a>
+        <a href="{% url 'students:bulk_upload_students' %}"
+          class="bg-green-600 text-white px-4 py-2 rounded">
+           Bulk Upload
+        </a>
+ 
+    </div>
+   
+    <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+
+            <!-- HEADER -->
+            <thead class="bg-gray-50 text-gray-600 uppercase text-xs tracking-wider">
+                <tr>
+                    <th class="px-6 py-4">Name</th>
+                    <th class="px-6 py-4">Class</th>
+                    <th class="px-6 py-4">Section</th>
+                    <th class="px-6 py-4 text-center">Actions</th>
+                </tr>
+            </thead>
+
+            <!-- BODY -->
+            <tbody class="divide-y">
+
+                {% for s in page_obj %}
+                <tr class="hover:bg-gray-50 transition duration-200">
+
+                    <td class="px-6 py-4 font-medium text-gray-800">
+                        {{ s.name }}
+                    </td>
+
+                    <td class="px-6 py-4 text-gray-600">
+                        {{ s.class_obj.name }}
+                    </td>
+
+                    <td class="px-6 py-4 text-gray-600">
+                        {{ s.section.name }}
+                    </td>
+
+                    <td class="px-6 py-4 text-center space-x-2">
+
+                        <a href="{% url 'students:edit_student' s.id %}"
+                           class="px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 transition text-xs font-semibold">
+                            Edit
+                        </a>
+
+                        <a href="{% url 'students:delete_student' s.id %}"
+                           class="px-3 py-1.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition text-xs font-semibold">
+                            Delete
+                        </a>
+
+                    </td>
+
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center py-6 text-gray-400">
+                        No students found
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
+
+       <div class="mt-4 flex justify-center gap-2">
+
+    {% if page_obj.has_previous %}
+        <a href="?page=1&search={{ search_query }}"
+           class="px-3 py-1 bg-gray-300 rounded">First</a>
+
+        <a href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}"
+           class="px-3 py-1 bg-gray-300 rounded">Prev</a>
+    {% endif %}
+
+    <span class="px-3 py-1 bg-blue-500 text-white rounded">
+        {{ page_obj.number }}
+    </span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&search={{ search_query }}"
+           class="px-3 py-1 bg-gray-300 rounded">Next</a>
+
+        <a href="?page={{ page_obj.paginator.num_pages }}&search={{ search_query }}"
+           class="px-3 py-1 bg-gray-300 rounded">Last</a>
+    {% endif %}
+</div>
+
+{% endblock %}

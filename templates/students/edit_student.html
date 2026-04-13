@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="max-w-md mx-auto bg-white p-6 rounded shadow">
+
+    <h2 class="text-xl font-bold mb-4">Edit Student</h2>
+
+    <form method="POST" class="space-y-4">
+        {% csrf_token %}
+
+        <div>
+            <label>Name</label>
+            {{ form.name }}
+        </div>
+
+        <div>
+            <label>Class</label>
+            {{ form.class_obj }}
+        </div>
+
+        <div>
+            <label>Section</label>
+            {{ form.section }}
+        </div>
+
+        <button class="bg-green-600 text-white px-4 py-2 rounded">
+            Update
+        </button>
+
+    </form>
+
+</div>
+<script>
+    const classField = document.getElementById("id_class_obj");
+    const sectionField = document.getElementById("id_section");
+
+    classField.addEventListener("change", function() {
+        const classId = this.value;
+
+        fetch(`/ajax/load-sections/?class_id=${classId}`)
+            .then(response => response.json())
+            .then(data => {
+
+                sectionField.innerHTML = '';
+
+                data.forEach(section => {
+                    const option = document.createElement("option");
+                    option.value = section.id;
+                    option.textContent = section.name;
+                    sectionField.appendChild(option);
+                });
+
+            });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="space-y-8">
+
+    <!--  TITLE -->
+    <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
+
+    <!-- STATS CARDS -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- ADMIN VIEW -->
+    {% if request.user.profile.role == 'admin' %}
+
+        <!-- Students -->
+        <div class="p-6 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md hover:scale-[1.02] transition">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-sm">Total Students</p>
+                    <h2 class="text-3xl font-bold">{{ total_students }}</h2>
+                </div>
+                <i data-lucide="users"></i>
+            </div>
+        </div>
+
+        <!-- Teachers -->
+        <div class="p-6 rounded-2xl bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md hover:scale-[1.02] transition">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-sm">Total Teachers</p>
+                    <h2 class="text-3xl font-bold">{{ total_teachers }}</h2>
+                </div>
+                <i data-lucide="user-check"></i>
+            </div>
+        </div>
+
+        <!-- Classes -->
+        <div class="p-6 rounded-2xl bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-md hover:scale-[1.02] transition">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-sm">Total Classes</p>
+                    <h2 class="text-3xl font-bold">{{ total_classes }}</h2>
+                </div>
+                <i data-lucide="layers"></i>
+            </div>
+        </div>
+
+    {% endif %}
+
+
+    <!--  TEACHER VIEW -->
+    {% if request.user.profile.role == 'teacher' %}
+
+        <div class="p-6 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md">
+            <p class="text-sm">Your Classes</p>
+            <h2 class="text-3xl font-bold">{{ total_classes }}</h2>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md">
+            <p class="text-sm">Your Students</p>
+            <h2 class="text-3xl font-bold">{{ total_students }}</h2>
+        </div>
+
+    {% endif %}
+
+
+    <!--STUDENT VIEW -->
+    {% if request.user.profile.role == 'student' %}
+
+        <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-md">
+            <p class="text-sm">Welcome</p>
+            <h2 class="text-2xl font-bold">
+                {{ request.user.username }}
+            </h2>
+        </div>
+
+    {% endif %}
+
+</div>
+
+    <!-- CHART -->
+    <div class="bg-white p-6 rounded-2xl shadow-md">
+
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-700">
+                Students per Class
+            </h2>
+        </div>
+
+        <canvas id="myChart" height="100"></canvas>
+
+    </div>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('myChart');
+
+    if (ctx) {
+        const labels = {{ labels|safe }};
+        const data = {{ data|safe }};
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Students',
+                    data: data,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    lucide.createIcons();
+</script>
+
+{% endblock %}
+

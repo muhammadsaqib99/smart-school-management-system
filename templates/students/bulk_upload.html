@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="max-w-xl mx-auto bg-white p-6 rounded shadow">
+
+    <h2 class="text-2xl font-bold mb-4">Bulk Upload Students</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <input type="file" name="file"
+               class="w-full border px-3 py-2 mb-4 rounded">
+
+        <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded">
+            Upload CSV
+        </button>
+    </form>
+
+</div>
+
+{% endblock %}
